@@ -33,8 +33,8 @@ public class Category {
     
     public static Category fromResultSet(java.sql.ResultSet resultSet)throws java.sql.SQLException{
         try {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
+            int id = resultSet.getInt("catrgories.id");
+            String name = resultSet.getString("catrgories.name");
             return new Category(id, name);
         } catch (java.sql.SQLException e) {
             throw new java.sql.SQLException("Error while creating Category from ResultSet", e);

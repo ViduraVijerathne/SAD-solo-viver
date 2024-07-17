@@ -27,6 +27,11 @@ public class UnitComboBox extends javax.swing.JComboBox<Unit> {
         controller = new UnitController();
         loadData();
     }
+    public Unit getSelectedUnit(){
+        Unit u = (Unit)this.getSelectedItem();
+        
+        return u;
+    }
     
     public void loadData(){
         try{

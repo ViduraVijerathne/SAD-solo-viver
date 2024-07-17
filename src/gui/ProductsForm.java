@@ -5,7 +5,16 @@
 package gui;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import components.CategoryComboBox;
+import controllers.ProductController;
+import exceptions.EntityAlreadyExistException;
+import exceptions.ValidationException;
+import model.Product;
 import myInterfaces.Refreshable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import raven.toast.Notifications;
+import utils.Validator;
 
 /**
  *
@@ -16,7 +25,11 @@ public class ProductsForm extends javax.swing.JPanel implements Refreshable {
     /**
      * Creates new form ProductsForm
      */
+    final ProductController controller;
+    private static final Logger logger = LoggerFactory.getLogger(ProductsForm.class);
+
     public ProductsForm() {
+        this.controller = new ProductController();
         initComponents();
         initTheme();
     }
@@ -25,6 +38,28 @@ public class ProductsForm extends javax.swing.JPanel implements Refreshable {
     public void refresh() {
         unitComboBox1.loadData();
         categoryComboBox1.loadData();
+        clearFields();
+    }
+
+    private Product getDataFromFields() {
+        Product p = new Product();
+        p.setName(tf_name.getText());
+        p.setId(0);
+        if (Validator.isValidDouble(tf_refill.getText())) {
+            p.setRefillStockLimit(Double.parseDouble(tf_refill.getText()));
+        }
+        p.setCategory(categoryComboBox1.getSelectedCategory());
+        p.setUnit(unitComboBox1.getSelectedUnit());
+        p.setBarcode(tf_barcode.getText());
+
+        return p;
+    }
+    
+    private void clearFields(){
+        tf_name.setText("");
+        tf_refill.setText("0");
+        tf_barcode.setText("");
+        tf_id.setText("");
     }
 
     private void initTheme() {
@@ -44,11 +79,13 @@ public class ProductsForm extends javax.swing.JPanel implements Refreshable {
         lbl_titile = new javax.swing.JLabel();
         leftFieldPanel1 = new components.LeftFieldPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        tf_id = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        tf_name = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jFormattedTextField1 = new javax.swing.JFormattedTextField();
+        tf_refill = new javax.swing.JFormattedTextField();
+        jLabel6 = new javax.swing.JLabel();
+        tf_barcode = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         unitComboBox1 = new components.UnitComboBox();
         jLabel4 = new javax.swing.JLabel();
@@ -65,23 +102,35 @@ public class ProductsForm extends javax.swing.JPanel implements Refreshable {
         jLabel1.setText("ID");
         leftFieldPanel1.add(jLabel1);
 
-        jTextField1.setText("0");
-        jTextField1.setEnabled(false);
-        leftFieldPanel1.add(jTextField1);
+        tf_id.setText("0");
+        tf_id.setEnabled(false);
+        leftFieldPanel1.add(tf_id);
 
         jLabel2.setText("Name");
         leftFieldPanel1.add(jLabel2);
 
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        tf_name.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                tf_nameActionPerformed(evt);
             }
         });
-        leftFieldPanel1.add(jTextField2);
+        leftFieldPanel1.add(tf_name);
 
         jLabel5.setText("Refilling Qantity");
         leftFieldPanel1.add(jLabel5);
-        leftFieldPanel1.add(jFormattedTextField1);
+
+        tf_refill.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        tf_refill.setText("0");
+        tf_refill.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tf_refillKeyReleased(evt);
+            }
+        });
+        leftFieldPanel1.add(tf_refill);
+
+        jLabel6.setText("Barcode");
+        leftFieldPanel1.add(jLabel6);
+        leftFieldPanel1.add(tf_barcode);
 
         jLabel3.setText("Unit");
         leftFieldPanel1.add(jLabel3);
@@ -92,6 +141,11 @@ public class ProductsForm extends javax.swing.JPanel implements Refreshable {
         leftFieldPanel1.add(categoryComboBox1);
 
         jButton1.setText("ADD");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         leftFieldPanel1.add(jButton1);
 
         jButton2.setText("Update");
@@ -153,9 +207,36 @@ public class ProductsForm extends javax.swing.JPanel implements Refreshable {
         f.setVisible(true);
     }//GEN-LAST:event_jButton5ActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void tf_nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_nameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_tf_nameActionPerformed
+
+    private void tf_refillKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_refillKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tf_refillKeyReleased
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        Product p = getDataFromFields();
+        try {
+            controller.add(p);
+            Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"product Successfully added");
+            refresh();
+
+        } catch (ValidationException ex) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, ex.getMessage());
+            logger.info(ex.getMessage());
+
+        } catch (java.sql.SQLException ex) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, ex.getMessage());
+            logger.error(ex.getMessage());
+
+        } catch (EntityAlreadyExistException ex) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, ex.getMessage());
+            logger.info(ex.getMessage());
+
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -165,16 +246,18 @@ public class ProductsForm extends javax.swing.JPanel implements Refreshable {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel lbl_titile;
     private components.LeftFieldPanel leftFieldPanel1;
+    private javax.swing.JTextField tf_barcode;
+    private javax.swing.JTextField tf_id;
+    private javax.swing.JTextField tf_name;
+    private javax.swing.JFormattedTextField tf_refill;
     private components.UnitComboBox unitComboBox1;
     // End of variables declaration//GEN-END:variables
 }

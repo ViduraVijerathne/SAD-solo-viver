@@ -19,3 +19,23 @@
 2024-07-17 15:59:12 INFO  gui.AddNewCategoryFrame - catrgory Name already exists!
 2024-07-17 15:59:13 INFO  gui.AddNewCategoryFrame - catrgory Name already exists!
 2024-07-17 15:59:13 INFO  gui.AddNewCategoryFrame - catrgory Name already exists!
+2024-07-17 17:58:07 INFO  gui.ProductsForm - Name cannot be null or empty.
+2024-07-17 18:00:36 INFO  gui.ProductsForm - Name cannot be null or empty.
+2024-07-17 18:00:43 INFO  gui.ProductsForm - Barcode  length must to 12.
+2024-07-17 18:00:52 INFO  gui.ProductsForm - Barcode  length must to 12.
+2024-07-17 18:02:31 INFO  gui.ProductsForm - Name cannot be null or empty.
+2024-07-17 18:02:35 INFO  gui.ProductsForm - Refill stock limit  must to be greater than 1.
+2024-07-17 18:02:37 INFO  gui.ProductsForm - Refill stock limit  must to be greater than 1.
+2024-07-17 18:02:40 INFO  gui.ProductsForm - Refill stock limit  must to be greater than 1.
+2024-07-17 18:12:15 INFO  gui.ProductsForm - Barcode  length must to 12.
+2024-07-17 18:13:56 INFO  gui.ProductsForm - product name already exist
+2024-07-17 18:13:58 INFO  gui.ProductsForm - product name already exist
+2024-07-17 18:13:58 INFO  gui.ProductsForm - product name already exist
+2024-07-17 18:13:59 INFO  gui.ProductsForm - product name already exist
+2024-07-17 18:13:59 INFO  gui.ProductsForm - product name already exist
+2024-07-17 18:13:59 INFO  gui.ProductsForm - product name already exist
+2024-07-17 18:13:59 INFO  gui.ProductsForm - product name already exist
+2024-07-17 18:14:00 INFO  gui.ProductsForm - product name already exist
+2024-07-17 18:14:00 INFO  gui.ProductsForm - product name already exist
+2024-07-17 18:14:00 INFO  gui.ProductsForm - product name already exist
+2024-07-17 18:14:00 INFO  gui.ProductsForm - product name already exist

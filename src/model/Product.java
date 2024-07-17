@@ -36,6 +36,8 @@ public class Product {
         }
         if (refillStockLimit < 0) {
             throw new ValidationException("Refill stock limit cannot be negative.");
+        }if (refillStockLimit < 1) {
+            throw new ValidationException("Refill stock limit  must to be greater than 1.");
         }
         if (unit == null || !unit.isValid()) {
             throw new ValidationException("Unit is invalid.");
@@ -54,10 +56,10 @@ public class Product {
 
     public static Product fromResultSet(java.sql.ResultSet resultSet) throws java.sql.SQLException {
         try {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-            String barcode = resultSet.getString("barcode");
-            double refillStockLimit = resultSet.getDouble("refil_stock_limit");
+            int id = resultSet.getInt("products.id");
+            String name = resultSet.getString("products.name");
+            String barcode = resultSet.getString("products.barcode");
+            double refillStockLimit = resultSet.getDouble("products.refil_stock_limit");
             Unit unit = Unit.fromResultSet(resultSet);
             Category category = Category.fromResultSet(resultSet);
             return new Product(id, name, barcode, refillStockLimit, unit, category);

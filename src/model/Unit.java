@@ -31,8 +31,8 @@ public class Unit {
     
     public static Unit fromResultSet(java.sql.ResultSet resultSet)throws java.sql.SQLException{
         try {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
+            int id = resultSet.getInt("units.id");
+            String name = resultSet.getString("units.name");
             return new Unit(id, name);
         } catch (java.sql.SQLException e) {
             throw new java.sql.SQLException("Error while creating Unit from ResultSet", e);

@@ -28,6 +28,11 @@ public class CategoryComboBox extends javax.swing.JComboBox<Unit> {
         controller = new CategoryController();
         loadData();
     }
+    
+    public Category getSelectedCategory(){
+        Category c  = (Category) this.getSelectedItem();
+        return c;
+    }
 
     public void loadData() {
         try {
