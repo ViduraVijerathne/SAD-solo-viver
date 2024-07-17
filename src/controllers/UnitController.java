@@ -7,6 +7,9 @@ package controllers;
 import exceptions.EntityAlreadyExistException;
 import exceptions.ValidationException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import model.Category;
 import model.Unit;
 
 /**
@@ -50,5 +53,17 @@ public class UnitController {
             }
 
         }
+    }
+    
+    public List<Unit> getAll()throws SQLException{
+        List<Unit> units = new ArrayList<Unit>();
+        String q = "select * from `units` ";
+        java.sql.PreparedStatement stmt = conn.prepareStatement(q);
+        java.sql.ResultSet resultSet = stmt.executeQuery();
+        while(resultSet.next()){
+            units.add(Unit.fromResultSet(resultSet));
+        }
+        return units;
+        
     }
 }

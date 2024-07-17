@@ -38,6 +38,9 @@ public class Unit {
             throw new java.sql.SQLException("Error while creating Unit from ResultSet", e);
         }
     }
-    
+    @Override
+    public String toString(){
+        return name;
+    }
     
 }

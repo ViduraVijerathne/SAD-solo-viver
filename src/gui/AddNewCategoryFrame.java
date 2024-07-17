@@ -12,6 +12,7 @@ import exceptions.ValidationException;
 import java.sql.SQLException;
 import model.Category;
 import model.Unit;
+import myInterfaces.Refreshable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import raven.toast.Notifications;
@@ -20,19 +21,32 @@ import raven.toast.Notifications;
  *
  * @author vidur
  */
-public class AddNewCategoryFrame extends javax.swing.JFrame {
+public class AddNewCategoryFrame extends javax.swing.JFrame implements Refreshable {
 
     /**
      * Creates new form AddNewUnitFrame
      */
     final CategoryController controller;
     private static final Logger logger = LoggerFactory.getLogger(AddNewCategoryFrame.class);
+    Refreshable refreshable;
 
     public AddNewCategoryFrame() {
         initComponents();
         controller = new CategoryController();
         setAlwaysOnTop(true);
         initTheme();
+    }
+
+    public void setRefreshable(Refreshable re) {
+        this.refreshable = re;
+    }
+
+    @Override
+    public void refresh() {
+        if (refreshable != null) {
+            refreshable.refresh();
+        }
+
     }
 
     private void initTheme() {
@@ -101,6 +115,7 @@ public class AddNewCategoryFrame extends javax.swing.JFrame {
         try {
             controller.Add(unit);
             Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER, "Successfully Added Unit!");
+            refresh();
             this.dispose();
         } catch (ValidationException ex) {
             Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, ex.getMessage());

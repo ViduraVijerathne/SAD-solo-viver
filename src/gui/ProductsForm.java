@@ -5,12 +5,13 @@
 package gui;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import myInterfaces.Refreshable;
 
 /**
  *
  * @author vidur
  */
-public class ProductsForm extends javax.swing.JPanel {
+public class ProductsForm extends javax.swing.JPanel implements Refreshable {
 
     /**
      * Creates new form ProductsForm
@@ -20,10 +21,17 @@ public class ProductsForm extends javax.swing.JPanel {
         initTheme();
     }
 
-    private void initTheme(){
+    @Override
+    public void refresh() {
+        unitComboBox1.loadData();
+        categoryComboBox1.loadData();
+    }
+
+    private void initTheme() {
         lbl_titile.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:$h1.font");
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -39,6 +47,8 @@ public class ProductsForm extends javax.swing.JPanel {
         jTextField1 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jFormattedTextField1 = new javax.swing.JFormattedTextField();
         jLabel3 = new javax.swing.JLabel();
         unitComboBox1 = new components.UnitComboBox();
         jLabel4 = new javax.swing.JLabel();
@@ -54,11 +64,24 @@ public class ProductsForm extends javax.swing.JPanel {
 
         jLabel1.setText("ID");
         leftFieldPanel1.add(jLabel1);
+
+        jTextField1.setText("0");
+        jTextField1.setEnabled(false);
         leftFieldPanel1.add(jTextField1);
 
         jLabel2.setText("Name");
         leftFieldPanel1.add(jLabel2);
+
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
+            }
+        });
         leftFieldPanel1.add(jTextField2);
+
+        jLabel5.setText("Refilling Qantity");
+        leftFieldPanel1.add(jLabel5);
+        leftFieldPanel1.add(jFormattedTextField1);
 
         jLabel3.setText("Unit");
         leftFieldPanel1.add(jLabel3);
@@ -118,14 +141,21 @@ public class ProductsForm extends javax.swing.JPanel {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        new AddNewUnitFrame().setVisible(true);
-       
+        AddNewUnitFrame f = new AddNewUnitFrame();
+        f.setRefreshable(this);
+        f.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
-        new AddNewCategoryFrame().setVisible(true);
+        AddNewCategoryFrame f = new AddNewCategoryFrame();
+        f.setRefreshable(this);
+        f.setVisible(true);
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -135,10 +165,12 @@ public class ProductsForm extends javax.swing.JPanel {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JLabel lbl_titile;

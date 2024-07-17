@@ -15,7 +15,7 @@ import net.miginfocom.swing.MigLayout;
 public class LeftFieldPanel  extends JPanel {
 
     public LeftFieldPanel() {
-     setLayout(new MigLayout("fillx,wrap,insets 30 40 50 40, width 320", "[fill]", "[]10[][]10[][]10[][]10[]50[]10[]10"));
+     setLayout(new MigLayout("fillx,wrap,insets 30 40 50 40, width 320", "[fill]", "[]10[][]10[][]10[][]10[]10[]10[]10[]10"));
         putClientProperty(FlatClientProperties.STYLE, ""
                 + "background:$Login.background;"
                 + "arc:20;");
