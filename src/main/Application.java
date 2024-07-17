@@ -47,7 +47,7 @@ public class Application extends javax.swing.JFrame {
         app.setContentPane(app.mainForm);
         app.mainForm.applyComponentOrientation(app.getComponentOrientation());
         setSelectedMenu(0, 0);
-//        app.mainForm.hideMenu();
+        app.mainForm.hideMenu();
         SwingUtilities.updateComponentTreeUI(app.mainForm);
         FlatAnimatedLafChange.hideSnapshotWithAnimation();
     }

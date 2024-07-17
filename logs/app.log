@@ -1,1 +1,9 @@
 2024-07-17 12:50:26 INFO  gui.LoginForm - invalid username
+2024-07-17 14:43:14 INFO  gui.LoginForm - invalid username
+2024-07-17 15:18:47 INFO  gui.LoginForm - Invalid username or password
+2024-07-17 15:38:50 INFO  gui.AddNewUnitFrame - Name cannot be null or empty.
+2024-07-17 15:39:01 INFO  gui.AddNewUnitFrame - Name cannot be null or empty.
+2024-07-17 15:39:07 INFO  gui.AddNewUnitFrame - Name cannot be null or empty.
+2024-07-17 15:49:54 INFO  gui.AddNewUnitFrame - Name cannot be null or empty.
+2024-07-17 15:50:00 INFO  gui.AddNewUnitFrame - Unit Name already exists!
+2024-07-17 15:51:16 INFO  gui.AddNewUnitFrame - Unit Name already exists!

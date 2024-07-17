@@ -73,15 +73,21 @@ public class MainForm extends JLayeredPane {
             // Application.mainForm.showForm(new DefaultForm("Form : " + index + " " + subIndex));
             if (index == 0) {
                 Application.showForm(new FormDashboard());
-            } else if (index == 1) {
-                if (subIndex == 1) {
-//                    Application.showForm(new FormInbox());
-                } else if (subIndex == 2) {
-//                    Application.showForm(new FormRead());
-                } else {
-                    action.cancel();
-                }
-            } else if (index == 9) {
+            }
+            else if(index == 1){
+                Application.showForm(new ProductsForm());
+            }
+//            else if (index == 1) {
+//                if (subIndex == 1) {
+////                    Application.showForm(new FormInbox());
+//                } else if (subIndex == 2) {
+////                    Application.showForm(new FormRead());
+//                } else {
+//                    action.cancel();
+//                }
+//            } 
+            
+            else if (index == 9) {
 //                Application.logout();
             } else {
                 action.cancel();
