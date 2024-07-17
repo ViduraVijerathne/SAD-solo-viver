@@ -7,3 +7,15 @@
 2024-07-17 15:49:54 INFO  gui.AddNewUnitFrame - Name cannot be null or empty.
 2024-07-17 15:50:00 INFO  gui.AddNewUnitFrame - Unit Name already exists!
 2024-07-17 15:51:16 INFO  gui.AddNewUnitFrame - Unit Name already exists!
+2024-07-17 15:58:10 ERROR gui.AddNewCategoryFrame - Unknown column 'units.name' in 'where clause'
+2024-07-17 15:58:58 INFO  gui.AddNewCategoryFrame - catrgory Name already exists!
+2024-07-17 15:59:07 INFO  gui.AddNewCategoryFrame - catrgory Name already exists!
+2024-07-17 15:59:09 INFO  gui.AddNewCategoryFrame - catrgory Name already exists!
+2024-07-17 15:59:10 INFO  gui.AddNewCategoryFrame - catrgory Name already exists!
+2024-07-17 15:59:11 INFO  gui.AddNewCategoryFrame - catrgory Name already exists!
+2024-07-17 15:59:11 INFO  gui.AddNewCategoryFrame - catrgory Name already exists!
+2024-07-17 15:59:11 INFO  gui.AddNewCategoryFrame - catrgory Name already exists!
+2024-07-17 15:59:12 INFO  gui.AddNewCategoryFrame - catrgory Name already exists!
+2024-07-17 15:59:12 INFO  gui.AddNewCategoryFrame - catrgory Name already exists!
+2024-07-17 15:59:13 INFO  gui.AddNewCategoryFrame - catrgory Name already exists!
+2024-07-17 15:59:13 INFO  gui.AddNewCategoryFrame - catrgory Name already exists!

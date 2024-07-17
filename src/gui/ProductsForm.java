@@ -86,6 +86,11 @@ public class ProductsForm extends javax.swing.JPanel {
         leftFieldPanel1.add(jButton4);
 
         jButton5.setText("Add New Category");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
         leftFieldPanel1.add(jButton5);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -114,7 +119,13 @@ public class ProductsForm extends javax.swing.JPanel {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         new AddNewUnitFrame().setVisible(true);
+       
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        new AddNewCategoryFrame().setVisible(true);
+    }//GEN-LAST:event_jButton5ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
