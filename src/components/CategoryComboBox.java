@@ -47,5 +47,14 @@ public class CategoryComboBox extends javax.swing.JComboBox<Unit> {
             logger.info(ex.getMessage());
         }
     }
+    
+    public void setSelectedCategory(Category c){
+        for(Category cat:categories){
+            if(cat.getId() == c.getId()){
+                this.setSelectedItem(cat);
+                break;
+            }
+        }
+    }
 
 }

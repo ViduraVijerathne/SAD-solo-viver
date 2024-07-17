@@ -18,7 +18,7 @@ import raven.toast.Notifications;
  * @author vidur
  */
 public class UnitComboBox extends javax.swing.JComboBox<Unit> {
-    
+
     List<Unit> units;
     UnitController controller;
     private static final Logger logger = LoggerFactory.getLogger(UnitComboBox.class);
@@ -27,26 +27,36 @@ public class UnitComboBox extends javax.swing.JComboBox<Unit> {
         controller = new UnitController();
         loadData();
     }
-    public Unit getSelectedUnit(){
-        Unit u = (Unit)this.getSelectedItem();
-        
+
+    public Unit getSelectedUnit() {
+        Unit u = (Unit) this.getSelectedItem();
+
         return u;
     }
-    
-    public void loadData(){
-        try{
+
+    public void loadData() {
+        try {
             units = controller.getAll();
             DefaultComboBoxModel model = (DefaultComboBoxModel) this.getModel();
             model.removeAllElements();
-            for(Unit c : units){
+            for (Unit c : units) {
                 model.addElement(c);
             }
-        }catch(java.sql.SQLException ex){
-             Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, ex.getMessage());
+        } catch (java.sql.SQLException ex) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, ex.getMessage());
             logger.info(ex.getMessage());
         }
     }
-    
-    
-    
+
+    public void setSelectUnit(Unit u) {
+        System.out.println(u.getName());
+        for (Unit unit : units) {
+            if(unit.getId() == u.getId()){
+                this.setSelectedItem(unit);
+                break;
+            }
+
+        }
+    }
+
 }

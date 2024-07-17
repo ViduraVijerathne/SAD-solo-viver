@@ -8,8 +8,10 @@ import com.formdev.flatlaf.FlatClientProperties;
 import components.CategoryComboBox;
 import controllers.ProductController;
 import exceptions.EntityAlreadyExistException;
+import exceptions.EntityNotFoundException;
 import exceptions.ValidationException;
 import model.Product;
+import myInterfaces.ProductTableContainerInterface;
 import myInterfaces.Refreshable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,24 +22,27 @@ import utils.Validator;
  *
  * @author vidur
  */
-public class ProductsForm extends javax.swing.JPanel implements Refreshable {
+public class ProductsForm extends javax.swing.JPanel implements Refreshable, ProductTableContainerInterface {
 
     /**
      * Creates new form ProductsForm
      */
     final ProductController controller;
     private static final Logger logger = LoggerFactory.getLogger(ProductsForm.class);
+    private Product selectedProduct;
 
     public ProductsForm() {
         this.controller = new ProductController();
         initComponents();
         initTheme();
+        productTable1.setContainer(this);
     }
 
     @Override
     public void refresh() {
         unitComboBox1.loadData();
         categoryComboBox1.loadData();
+        productTable1.loadData();
         clearFields();
     }
 
@@ -54,12 +59,27 @@ public class ProductsForm extends javax.swing.JPanel implements Refreshable {
 
         return p;
     }
-    
-    private void clearFields(){
+
+    public void setSelectedProduct(Product p) {
+        setDataToFields(p);
+        selectedProduct = p;
+    }
+
+    private void setDataToFields(Product p) {
+        tf_id.setText(String.valueOf(p.getId()));
+        tf_name.setText(p.getName());
+        tf_refill.setText(String.valueOf(p.getRefillStockLimit()));
+        tf_barcode.setText(p.getBarcode());
+        unitComboBox1.setSelectUnit(p.getUnit());
+        categoryComboBox1.setSelectedCategory(p.getCategory());
+    }
+
+    private void clearFields() {
         tf_name.setText("");
         tf_refill.setText("0");
         tf_barcode.setText("");
         tf_id.setText("");
+        selectedProduct = null;
     }
 
     private void initTheme() {
@@ -95,6 +115,7 @@ public class ProductsForm extends javax.swing.JPanel implements Refreshable {
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        productTable1 = new components.ProductTable();
 
         lbl_titile.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_titile.setText("Products");
@@ -149,9 +170,19 @@ public class ProductsForm extends javax.swing.JPanel implements Refreshable {
         leftFieldPanel1.add(jButton1);
 
         jButton2.setText("Update");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
         leftFieldPanel1.add(jButton2);
 
-        jButton3.setText("Deactivate");
+        jButton3.setText("Clear Fields");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
         leftFieldPanel1.add(jButton3);
 
         jButton4.setText("Add New Unit");
@@ -179,7 +210,8 @@ public class ProductsForm extends javax.swing.JPanel implements Refreshable {
                     .addComponent(lbl_titile, javax.swing.GroupLayout.DEFAULT_SIZE, 800, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(leftFieldPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(productTable1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -187,8 +219,13 @@ public class ProductsForm extends javax.swing.JPanel implements Refreshable {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lbl_titile)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(leftFieldPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(leftFieldPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(productTable1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -220,7 +257,7 @@ public class ProductsForm extends javax.swing.JPanel implements Refreshable {
         Product p = getDataFromFields();
         try {
             controller.add(p);
-            Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER,"product Successfully added");
+            Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER, "product Successfully added");
             refresh();
 
         } catch (ValidationException ex) {
@@ -238,6 +275,40 @@ public class ProductsForm extends javax.swing.JPanel implements Refreshable {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        if (selectedProduct == null) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, "select a product before update");
+            return;
+
+        }
+        try {
+            Product p = getDataFromFields();
+            p.setId(selectedProduct.getId());
+            controller.update(p);
+            Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER, "product Successfully updated");
+            refresh();
+
+        } catch (ValidationException ex) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, ex.getMessage());
+            logger.info(ex.getMessage());
+
+        } catch (java.sql.SQLException ex) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, ex.getMessage());
+            logger.error(ex.getMessage());
+
+        } catch (EntityNotFoundException ex) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, ex.getMessage());
+            logger.info(ex.getMessage());
+
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        clearFields();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private components.CategoryComboBox categoryComboBox1;
@@ -254,6 +325,7 @@ public class ProductsForm extends javax.swing.JPanel implements Refreshable {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel lbl_titile;
     private components.LeftFieldPanel leftFieldPanel1;
+    private components.ProductTable productTable1;
     private javax.swing.JTextField tf_barcode;
     private javax.swing.JTextField tf_id;
     private javax.swing.JTextField tf_name;

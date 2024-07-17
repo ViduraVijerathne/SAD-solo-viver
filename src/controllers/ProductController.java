@@ -5,7 +5,10 @@
 package controllers;
 
 import exceptions.EntityAlreadyExistException;
+import exceptions.EntityNotFoundException;
 import exceptions.ValidationException;
+import java.util.ArrayList;
+import java.util.List;
 import model.Product;
 
 /**
@@ -36,7 +39,7 @@ public class ProductController {
 
     }
 
-    public void add(Product p) throws ValidationException, java.sql.SQLException,EntityAlreadyExistException {
+    public void add(Product p) throws ValidationException, java.sql.SQLException, EntityAlreadyExistException {
         if (p.isValid()) {
             if (getProductByName(p.getName()) == null) {
                 String q = "INSERT INTO `products` (`barcode`, `name`, `refil_stock_limit`, `units_id`, `catrgories_id`) VALUES (?,?, ?, ?, ?);";
@@ -47,10 +50,37 @@ public class ProductController {
                 stmt.setInt(4, p.getUnit().getId());
                 stmt.setInt(5, p.getCategory().getId());
                 stmt.execute();
-            }else{
+            } else {
                 throw new EntityAlreadyExistException("product name already exist");
             }
 
+        }
+
+    }
+
+    public List<Product> getAll() throws java.sql.SQLException {
+        List<Product> p = new ArrayList<>();
+        String q = "SELECT * FROM products INNER JOIN units ON units.id = products.units_id  INNER JOIN catrgories ON  catrgories.id = products.catrgories_id ";
+        java.sql.PreparedStatement stmt = conn.prepareStatement(q);
+        java.sql.ResultSet resultSet = stmt.executeQuery();
+        while (resultSet.next()) {
+            p.add(Product.fromResultSet(resultSet));
+        }
+
+        return p;
+    }
+
+    public void update(Product p) throws ValidationException, java.sql.SQLException, EntityNotFoundException {
+        if (p.isValid()) {
+            String q = "UPDATE `products` SET `barcode`=?, `name`=?, `refil_stock_limit`=?, `units_id`=? , `catrgories_id`=? WHERE  `id`=?";
+            java.sql.PreparedStatement stmt = conn.prepareStatement(q);
+            stmt.setString(1, p.getBarcode());
+            stmt.setString(2, p.getName());
+            stmt.setDouble(3, p.getRefillStockLimit());
+            stmt.setInt(4, p.getUnit().getId());
+            stmt.setInt(5, p.getCategory().getId());
+            stmt.setInt(6, p.getId());
+            stmt.execute();
         }
 
     }

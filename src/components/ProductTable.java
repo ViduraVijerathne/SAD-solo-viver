@@ -5,6 +5,11 @@
 package components;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import controllers.ProductController;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import model.Product;
+import myInterfaces.ProductTableContainerInterface;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -16,13 +21,44 @@ public class ProductTable extends javax.swing.JPanel {
     /**
      * Creates new form ProductTable
      */
-    public ProductTable() {
-                initComponents();
+    final ProductController controller;
+    List<Product> products;
+    Product selectedProduct;
+    private ProductTableContainerInterface container;
 
-        setLayout(new MigLayout("fillx,wrap,insets 30 40 50 40, width 320", "[fill]", "[]20[][]15[][]30[]"));
+    public ProductTable() {
+        controller = new ProductController();
+        initComponents();
+
+        setLayout(new MigLayout("fillx,wrap,insets 30 40 50 40, width 320", "[fill]", ""));
         putClientProperty(FlatClientProperties.STYLE, ""
                 + "background:$Login.background;"
                 + "arc:20;");
+        loadData();
+    }
+
+    public void setContainer(ProductTableContainerInterface c) {
+        this.container = c;
+    }
+
+    public void loadData() {
+        try {
+            products = controller.getAll();
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            model.setRowCount(0);
+            for (Product p : products) {
+                model.addRow(new Object[]{
+                    p.getId(),
+                    p.getName(),
+                    p.getBarcode(),
+                    p.getRefillStockLimit(),
+                    p.getUnit().getName(),
+                    p.getCategory().getName(),}
+                );
+            }
+        } catch (java.sql.SQLException ex) {
+
+        }
     }
 
     /**
@@ -39,16 +75,34 @@ public class ProductTable extends javax.swing.JPanel {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Id", "Name", "Barcode", "Refill Qty", "Unit", "Category"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                true, true, false, false, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setResizable(false);
+            jTable1.getColumnModel().getColumn(1).setResizable(false);
+            jTable1.getColumnModel().getColumn(2).setResizable(false);
+            jTable1.getColumnModel().getColumn(3).setResizable(false);
+            jTable1.getColumnModel().getColumn(4).setResizable(false);
+            jTable1.getColumnModel().getColumn(5).setResizable(false);
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -61,6 +115,25 @@ public class ProductTable extends javax.swing.JPanel {
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        int row = jTable1.getSelectedRow();
+        if (row >= 0) {
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            int id =Integer.valueOf(String.valueOf(model.getValueAt(row,0))) ;
+            for(Product p : products){
+                if(p.getId() == id){
+                    selectedProduct = p;
+                    if(container != null){
+                        container.setSelectedProduct(p);
+                    }
+                    break;
+                }
+            }
+            
+        }
+    }//GEN-LAST:event_jTable1MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
