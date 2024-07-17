@@ -5,8 +5,14 @@
 package gui;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import exceptions.AuthenticationException;
+import exceptions.ValidationException;
+import java.sql.SQLException;
 import main.Application;
+import model.Auth;
 import net.miginfocom.swing.MigLayout;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import raven.toast.Notifications;
 
 /**
@@ -18,17 +24,24 @@ public class LoginForm extends javax.swing.JPanel {
     /**
      * Creates new form LoginForm
      */
+    private static final Logger logger = LoggerFactory.getLogger(LoginForm.class);
+    private static Auth auth;
+
     public LoginForm() {
         initComponents();
         init();
     }
     
+    public  Auth getAuth(){
+        return auth;
+    }
+
     private void init() {
         setLayout(new MigLayout("al center center"));
 
         lbTitle.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:$h1.font");
-        
+
         txtPass.putClientProperty(FlatClientProperties.STYLE, ""
                 + "showRevealButton:true;"
                 + "showCapsLock:true");
@@ -96,9 +109,27 @@ public class LoginForm extends javax.swing.JPanel {
 
     private void cmdLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLoginActionPerformed
         // TODO add your handling code here:
-        Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, "Hello sample message");
+        Auth a = new Auth(txtUser.getText(), new String(txtPass.getPassword()));
+        try {
+            if (a.authenticate()) {
+                Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_CENTER, "Successfully logged in!");
+                auth = a;
+                Application.login();
 
-        Application.login();
+            }
+        } catch (AuthenticationException ex) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, ex.getMessage());
+            logger.info(ex.getMessage());
+        } catch (ValidationException ex) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, ex.getMessage());
+            logger.info(ex.getMessage());
+
+        } catch (SQLException ex) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_CENTER, ex.getMessage());
+            logger.error(ex.getMessage());
+
+        }
+
     }//GEN-LAST:event_cmdLoginActionPerformed
 
 
